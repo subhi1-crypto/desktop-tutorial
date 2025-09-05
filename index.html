@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Weather App</title>
+</head>
+<body>
+  <h1>Weather App</h1>
+
+  <input type="text" id="city" placeholder="Enter city name">
+  <button onclick="getWeather()">Get Weather</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("city").value;
+      const apiKey = "5f13b804fea2353d008753f93637f717"; // paste your OpenWeather key here
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.cod === 200) {
+        document.getElementById("result").innerHTML = `
+          <h2>${data.name}, ${data.sys.country}</h2>
+          <p>🌡 Temperature: ${data.main.temp}°C</p>
+          <p>💧 Humidity: ${data.main.humidity}%</p>
+          <p>💨 Wind: ${data.wind.speed} m/s</p>
+          <p>☁️ Weather: ${data.weather[0].description}</p>
+        `;
+      } else {
+        document.getElementById("result").innerHTML =
+          `<p style="color:red;">❌ ${data.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
