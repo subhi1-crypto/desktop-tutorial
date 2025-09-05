@@ -1,47 +1,35 @@
+import os
 from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
 
-# put your OpenWeather API key here
-API_KEY = "5f13b804fea2353d008753f93637f717"
-
-BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+# 🔑 API key (you can set it in Render Environment Variables)
+API_KEY = os.environ.get("API_KEY", "your_api_key_here")
+BASE_URL = "http://api.openweathermap.org/data/2.5/weather?"
 
 @app.route("/", methods=["GET", "POST"])
-def home():
+def index():
     weather_data = None
-    alerts = []
+    error = None
 
     if request.method == "POST":
-        city = request.form.get("city")
-        if city:
-            params = {"q": city, "appid": API_KEY, "units": "metric"}
-            response = requests.get(BASE_URL, params=params)
-            data = response.json()
-            print(data)  # 👈 shows in terminal for debugging
+        city = request.form["city"]
+        url = f"{BASE_URL}q={city}&appid={API_KEY}&units=metric"
+        response = requests.get(url).json()
 
-            if response.status_code == 200:
-                weather_data = {
-                    "city": data["name"],
-                    "country": data["sys"]["country"],
-                    "temp": data["main"]["temp"],
-                    "feels_like": data["main"]["feels_like"],
-                    "humidity": data["main"]["humidity"],
-                    "wind": round(data["wind"]["speed"] * 3.6, 1),  # m/s → km/h
-                    "description": data["weather"][0]["description"],
-                    "icon": data["weather"][0]["icon"],
-                }
+        if response.get("cod") != "404":
+            weather_data = {
+                "city": response["name"],
+                "temp": response["main"]["temp"],
+                "description": response["weather"][0]["description"].title(),
+                "icon": response["weather"][0]["icon"]
+            }
+        else:
+            error = "⚠️ City not found. Please try again."
 
-                # simple alerts
-                if weather_data["temp"] > 35:
-                    alerts.append("🥵 Stay hydrated, it’s very hot!")
-                if "rain" in weather_data["description"].lower():
-                    alerts.append("🌧 Don’t forget your umbrella!")
-                if weather_data["wind"] > 50:
-                    alerts.append("🌪 High wind warning!")
-
-    return render_template("index.html", weather=weather_data, alerts=alerts)
+    return render_template("index.html", weather=weather_data, error=error)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render provides PORT
+    app.run(host="0.0.0.0", port=port)
