@@ -25,16 +25,15 @@ Requests library (for API calls)
 OpenWeather API
 
  Project Structure
-weather-app/
-│── app.py              # Flask application
-│── templates/
-│    └── index.html     # Frontend HTML
-│── static/             # (Optional) CSS/JS files
-│── README.md           # Project description
-│── requirements.txt    # List of dependencies
+weather-app
+│── app.py              
+│── templates
+│     index.html    
+│── static
+       style.css
+
+ 
 
 
 
 
-
-👉 Do you want me to also create a requirements.txt file for you (so you can just pip install -r requirements.txt when someone clones your repo)?
