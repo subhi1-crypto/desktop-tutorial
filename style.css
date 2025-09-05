@@ -1,0 +1,38 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #0b1320;
+  color: #e6edf7;
+  text-align: center;
+  padding: 2rem;
+}
+
+h1 {
+  color: #3b82f6;
+}
+
+form {
+  margin: 1rem 0;
+}
+
+input {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+}
+
+.card {
+  background: #10192b;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem auto;
+  width: 300px;
+}
